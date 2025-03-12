@@ -235,7 +235,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "intents-storage-deposit-tool"
+name = "intents-tools"
 version = "0.1.0"
 dependencies = [
  "anyhow",
