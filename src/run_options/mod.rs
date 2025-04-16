@@ -1,6 +1,7 @@
-use clap::{Parser, Subcommand};
-
 pub mod fund_storage_deposit_options;
+pub mod replace_poa_token_contract_options;
+
+use clap::{Parser, Subcommand};
 
 #[derive(Parser)]
 pub struct RunOptions {
@@ -10,6 +11,8 @@ pub struct RunOptions {
 
 #[derive(Subcommand, Clone, Debug)]
 pub enum RunCommand {
-    /// Run storage deposit funding a list of given tokens
+    /// Run storage deposit funding for a list of given tokens using the StorageManagement interface
     FundStorageDeposit(fund_storage_deposit_options::FundStorageDepositOptions),
+    /// Replace PoA token smart contract with a new one
+    ReplacePOATokenContract(replace_poa_token_contract_options::ReplacePoATokenContractOptions),
 }

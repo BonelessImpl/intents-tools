@@ -1,24 +1,6 @@
 use clap::Parser;
 use std::str::FromStr;
 
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub enum Operation {
-    SetRecord,
-    Cleanup,
-}
-
-impl FromStr for Operation {
-    type Err = String;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s.to_lowercase().as_str() {
-            "set-record" => Ok(Operation::SetRecord),
-            "cleanup" => Ok(Operation::Cleanup),
-            _ => Err(format!("Unknown operation: {}", s)),
-        }
-    }
-}
-
 #[derive(Parser, Clone, Debug, Default)]
 pub struct FundStorageDepositOptions {
     /// Run all commands normally, except for transaction commands that would modify the blockchain
