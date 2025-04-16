@@ -28,7 +28,7 @@ pub struct ReplacePoATokenContractOptions {
 
     /// The minimum amount of near for the source account to have to pay the fees
     /// Example: 1 NEAR, 1000000 yoctoNear, etc.
-    #[clap(long, short('n'), value_name = "AMOUNT", default_value("1 NEAR"))] // TODO: consider attached deposits
+    #[clap(long, short('n'), value_name = "AMOUNT", default_value("1 NEAR"))]
     #[arg(value_parser(parse_near))]
     pub min_required_balance_for_fees: u128,
 

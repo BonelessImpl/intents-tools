@@ -72,9 +72,6 @@ fn public_key_from_seed_phrase(seed_phrase: &str) -> anyhow::Result<String> {
     Ok(public_key.to_string())
 }
 
-// near contract call-function as-transaction ft1.poa-factory.bonelessimpl.near add_full_access_key json-args '{ "public_key": "ed25519:7ZCcaBE9dxQ7a2LTUEAdV7xUBh2jhf2LPUERXp9w1JPC" }' prepaid-gas '100.0 Tgas' attached-deposit '0 yoctoNEAR' sign-as poa-factory.bonelessimpl.near network-config mainnet sign-with-keychain send
-// near contract call-function as-transaction ft1.poa-factory.bonelessimpl.near delete_key          json-args '{ "public_key": "ed25519:7ZCcaBE9dxQ7a2LTUEAdV7xUBh2jhf2LPUERXp9w1JPC" }' prepaid-gas '100.0 Tgas' attached-deposit '0 yoctoNEAR' sign-as poa-factory.bonelessimpl.near network-config mainnet sign-with-keychain send
-
 fn add_full_access_key_to_poa_token(
     signer: &str,
     token: &Subtoken,
