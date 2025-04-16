@@ -232,7 +232,7 @@ pub fn run(options: ReplacePoATokenContractOptions) -> anyhow::Result<()> {
     let no_one_yocto_for_key_adding = options.no_one_yocto_for_key_adding;
     let poa_factory_contract_id = options.poa_factory_account_id;
     let poa_token_wasm_file = options.poa_token_wasm_file;
-    let contract_backup_dir = options.poa_tokens_contract_backup_dir;
+    let contract_backup_dir = options.poa_tokens_contracts_backup_dir;
     let seed_phrase_file_path = options.poa_seed_file;
 
     if !poa_factory_contract_id.is_ascii() || poa_factory_contract_id.split_whitespace().count() > 1

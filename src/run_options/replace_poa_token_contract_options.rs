@@ -43,7 +43,7 @@ pub struct ReplacePoATokenContractOptions {
 
     /// The directory (absolute or relative) where backup contracts will be stored, before writing new ones.
     #[clap(long, default_value("poa-tokens-contracts-backup"))]
-    pub poa_tokens_contract_backup_dir: PathBuf,
+    pub poa_tokens_contracts_backup_dir: PathBuf,
 }
 
 fn parse_near(val: &str) -> Result<u128, String> {
