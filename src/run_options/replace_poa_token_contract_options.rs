@@ -20,22 +20,11 @@ pub struct ReplacePoATokenContractOptions {
     #[clap(long, short('f'), value_name = "PATH")]
     pub tokens_prefixes_list_file: std::path::PathBuf,
 
-    /// The account that will be signing transactions to add full access keys to PoA token contracts' accounts.
-    /// Note that this account should have the power to add/remove access keys to PoA tokens.
-    /// The key should be in the keychain of the OS.
-    #[clap(long, short('s'), value_name = "ACCOUNT-ID")]
-    pub source_account_for_action: String,
-
     /// The minimum amount of near for the source account to have to pay the fees
     /// Example: 1 NEAR, 1000000 yoctoNear, etc.
     #[clap(long, short('n'), value_name = "AMOUNT", default_value("1 NEAR"))]
     #[arg(value_parser(parse_near))]
     pub min_required_balance_for_fees: u128,
-
-    /// Adding and removing full access keys generally requires having attached deposit
-    /// of one yoctoNEAR. However, due to a mistake, this may not be enforced in the contract.
-    #[clap(long)]
-    pub no_one_yocto_for_key_adding: bool,
 
     /// The wasm files that will be replacing the PoA token contracts
     #[clap(long, value_name = "PATH")]

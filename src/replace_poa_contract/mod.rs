@@ -76,68 +76,154 @@ fn add_full_access_key_to_poa_token(
     signer: &str,
     token: &Subtoken,
     public_key: &str,
-    attach_one_yoctonear: bool,
 ) -> anyhow::Result<()> {
-    let yoctonear_amount = attach_one_yoctonear as u128;
-    let cmd_args = [
-        "near",
-        "contract",
-        "call-function",
-        "as-transaction",
-        &token.account_id(),
-        "add_full_access_key",
-        "json-args",
-        &format!("{{ \"public_key\": \"{public_key}\" }}"),
-        "prepaid-gas",
-        "100.0Tgas",
-        "attached-deposit",
-        &format!("{yoctonear_amount}yoctonear"),
-        "sign-as",
-        signer,
-        "network-config",
-        "mainnet",
-        "sign-with-keychain",
-        "send",
-    ];
+    // We run two commands, with one yocto and without one yocto. We do that because there is a mistake in one of the versions of PoA token, where
+    // the function wasn't marked as payable. This function must succeed if only one of these two functions succeed.
 
-    call_cmd(cmd_args)?;
+    let res_no_yocto = {
+        let yoctonear_amount = 0;
+        let cmd_args_no_yocto = [
+            "near",
+            "contract",
+            "call-function",
+            "as-transaction",
+            &token.account_id(),
+            "add_full_access_key",
+            "json-args",
+            &format!("{{ \"public_key\": \"{public_key}\" }}"),
+            "prepaid-gas",
+            "100.0Tgas",
+            "attached-deposit",
+            &format!("{yoctonear_amount}yoctonear"),
+            "sign-as",
+            signer,
+            "network-config",
+            "mainnet",
+            "sign-with-keychain",
+            "send",
+        ];
+
+        call_cmd(cmd_args_no_yocto)
+    };
+
+    let res_one_yocto = {
+        let yoctonear_amount = 1;
+
+        let cmd_args_with_yocto = [
+            "near",
+            "contract",
+            "call-function",
+            "as-transaction",
+            &token.account_id(),
+            "add_full_access_key",
+            "json-args",
+            &format!("{{ \"public_key\": \"{public_key}\" }}"),
+            "prepaid-gas",
+            "100.0Tgas",
+            "attached-deposit",
+            &format!("{yoctonear_amount}yoctonear"),
+            "sign-as",
+            signer,
+            "network-config",
+            "mainnet",
+            "sign-with-keychain",
+            "send",
+        ];
+
+        call_cmd(cmd_args_with_yocto)
+    };
+
+    if res_no_yocto.is_err() && res_one_yocto.is_err() {
+        eprintln!(
+            "Error with no yoctonear attached: {}",
+            res_no_yocto.unwrap_err()
+        );
+        eprintln!(
+            "Error with one yoctonear attached: {}",
+            res_one_yocto.unwrap_err()
+        );
+        return Err(anyhow::anyhow!("Both attempts to add key failed"));
+    }
+
+    res_no_yocto.or(res_one_yocto)?;
 
     println!("✔ - Added full access key to `{}`", token.account_id());
 
     Ok(())
 }
 
-fn delete_key_to_poa_token(
-    signer: &str,
-    token: &Subtoken,
-    public_key: &str,
-    attach_one_yoctonear: bool,
-) -> anyhow::Result<()> {
-    let yoctonear_amount = attach_one_yoctonear as u128;
-    let cmd_args = [
-        "near",
-        "contract",
-        "call-function",
-        "as-transaction",
-        &token.account_id(),
-        "delete_key",
-        "json-args",
-        &format!("{{ \"public_key\": \"{public_key}\" }}"),
-        "prepaid-gas",
-        "100.0Tgas",
-        "attached-deposit",
-        &format!("{yoctonear_amount}yoctonear"),
-        "sign-as",
-        signer,
-        "network-config",
-        "mainnet",
-        "sign-with-keychain",
-        "send",
-    ];
+fn delete_key_to_poa_token(signer: &str, token: &Subtoken, public_key: &str) -> anyhow::Result<()> {
+    // We run two commands, with one yocto and without one yocto. We do that because there is a mistake in one of the versions of PoA token, where
+    // the function wasn't marked as payable. This function must succeed if only one of these two functions succeed.
 
-    call_cmd(cmd_args)?;
+    let res_no_yocto = {
+        let yoctonear_amount = 0;
+        let cmd_args_no_yocto = [
+            "near",
+            "contract",
+            "call-function",
+            "as-transaction",
+            &token.account_id(),
+            "delete_key",
+            "json-args",
+            &format!("{{ \"public_key\": \"{public_key}\" }}"),
+            "prepaid-gas",
+            "100.0Tgas",
+            "attached-deposit",
+            &format!("{yoctonear_amount}yoctonear"),
+            "sign-as",
+            signer,
+            "network-config",
+            "mainnet",
+            "sign-with-keychain",
+            "send",
+        ];
 
-    println!("✔ - Removed access key from `{}`", token.account_id());
+        call_cmd(cmd_args_no_yocto)
+    };
+
+    let res_one_yocto = {
+        let yoctonear_amount = 1;
+
+        let cmd_args_with_yocto = [
+            "near",
+            "contract",
+            "call-function",
+            "as-transaction",
+            &token.account_id(),
+            "delete_key",
+            "json-args",
+            &format!("{{ \"public_key\": \"{public_key}\" }}"),
+            "prepaid-gas",
+            "100.0Tgas",
+            "attached-deposit",
+            &format!("{yoctonear_amount}yoctonear"),
+            "sign-as",
+            signer,
+            "network-config",
+            "mainnet",
+            "sign-with-keychain",
+            "send",
+        ];
+
+        call_cmd(cmd_args_with_yocto)
+    };
+
+    if res_no_yocto.is_err() && res_one_yocto.is_err() {
+        eprintln!(
+            "Error with no yoctonear attached: {}",
+            res_no_yocto.unwrap_err()
+        );
+        eprintln!(
+            "Error with one yoctonear attached: {}",
+            res_one_yocto.unwrap_err()
+        );
+        return Err(anyhow::anyhow!("Both attempts to remove key failed"));
+    }
+
+    res_no_yocto.or(res_one_yocto)?;
+
+    println!("✔ - Deleted access key to `{}`", token.account_id());
 
     Ok(())
 }
@@ -227,9 +313,7 @@ fn backup_contracts(contract_backup_dir: &Path, tokens: &SubtokenList) -> anyhow
 
 pub fn run(options: ReplacePoATokenContractOptions) -> anyhow::Result<()> {
     let token_ids_list_path = options.tokens_prefixes_list_file;
-    let source_account = &options.source_account_for_action;
     let min_required_balance_for_fees_in_yocto_near = options.min_required_balance_for_fees;
-    let no_one_yocto_for_key_adding = options.no_one_yocto_for_key_adding;
     let poa_factory_contract_id = options.poa_factory_account_id;
     let poa_token_wasm_file = options.poa_token_wasm_file;
     let contract_backup_dir = options.poa_tokens_contracts_backup_dir;
@@ -249,18 +333,18 @@ pub fn run(options: ReplacePoATokenContractOptions) -> anyhow::Result<()> {
         ));
     }
 
-    let source_account_balance =
-        get_account_balance(source_account).context("While checking source account balance")?;
+    let source_account_balance = get_account_balance(&poa_factory_contract_id)
+        .context("While checking source account balance")?;
 
     if source_account_balance < min_required_balance_for_fees_in_yocto_near {
         return Err(anyhow::anyhow!(
-            "The provided source account `{source_account}` has balance {} less than the lower limit: {}",
+            "The provided source account `{poa_factory_contract_id}` has balance {} less than the lower limit: {}",
             NearToken::from_yoctonear(source_account_balance),
             NearToken::from_yoctonear(min_required_balance_for_fees_in_yocto_near)
         ));
     }
 
-    let tokens = SubtokenList::read_list_from_file(poa_factory_contract_id, token_ids_list_path)?;
+    let tokens = SubtokenList::read_list_from_file(&poa_factory_contract_id, token_ids_list_path)?;
 
     let seed_phrase = read_seed_phrase(&seed_phrase_file_path)?;
 
@@ -277,24 +361,14 @@ pub fn run(options: ReplacePoATokenContractOptions) -> anyhow::Result<()> {
     std::thread::sleep(std::time::Duration::from_secs(8));
 
     for subtoken in &tokens.tokens_list {
-        add_full_access_key_to_poa_token(
-            source_account,
-            subtoken,
-            &public_key,
-            !no_one_yocto_for_key_adding,
-        )
-        .context("While adding full access key")?;
+        add_full_access_key_to_poa_token(&poa_factory_contract_id, subtoken, &public_key)
+            .context("While adding full access key")?;
 
         // We delete the key eventually
         let _access_key_deleter = OnceDestructor::new(|| {
-            delete_key_to_poa_token(
-                source_account,
-                subtoken,
-                &public_key,
-                !no_one_yocto_for_key_adding,
-            )
-            .context("While adding full access key")
-            .expect("Deleting access key failed")
+            delete_key_to_poa_token(&poa_factory_contract_id, subtoken, &public_key)
+                .context("While adding full access key")
+                .expect("Deleting access key failed")
         });
 
         deploy_contract(&seed_phrase, subtoken, &poa_token_wasm_file)?;

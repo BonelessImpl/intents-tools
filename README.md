@@ -42,8 +42,5 @@ cargo run -- replace-poa-token-contract --help
 First, place `poa-seed.txt` with the seed phrase that contains the seed, whose key will be added (and eventually removed) to PoA token contracts to do the replacement
 
 ```
-cargo run -- replace-poa-token-contract --poa-factory-account-id poa-factory.example.near --tokens-prefixes-list-file subtokens.txt --source-account-for-action poa-factory.example.near --poa-token-wasm-file defuse_poa_token.wasm --no-one-yocto-for-key-adding
+cargo run -- replace-poa-token-contract --poa-factory-account-id poa-factory.example.near --tokens-prefixes-list-file subtokens.txt --source-account-for-action poa-factory.example.near --poa-token-wasm-file defuse_poa_token.wasm
 ```
-
-You can choose to add `--no-one-yocto-for-key-adding` or not, based on the version of the contract you're using. Old contracts missed the `assert_one_yocto()` assertion.
-

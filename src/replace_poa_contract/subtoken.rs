@@ -37,7 +37,7 @@ pub struct SubtokenList {
 
 impl SubtokenList {
     pub fn read_list_from_file(
-        poa_factory_account: String,
+        poa_factory_account: &str,
         subtoken_list_file: impl AsRef<std::path::Path>,
     ) -> anyhow::Result<Self> {
         let mut f = std::fs::File::open(subtoken_list_file).context("Opening subtokens file")?;
@@ -52,7 +52,7 @@ impl SubtokenList {
             .map(|l| l.trim())
             .filter(|l| !l.starts_with("#"))
             .filter(|l| !l.is_empty())
-            .map(|l| Subtoken::from_line(poa_factory_account.clone(), l))
+            .map(|l| Subtoken::from_line(poa_factory_account, l))
             .collect::<Result<Vec<_>, _>>()
             .context("Not all lines have valid data")?;
 
