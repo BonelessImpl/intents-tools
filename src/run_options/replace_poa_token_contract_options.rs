@@ -9,7 +9,7 @@ pub struct ReplacePoATokenContractOptions {
     pub poa_seed_file: PathBuf,
 
     /// The account id that contains the PoA factory
-    #[clap(long)]
+    #[clap(long, value_name = "ACCOUNT-ID")]
     pub poa_factory_account_id: String,
 
     /// A file that contents the list of tokens, but only their prefixes. Not full addresses.
@@ -38,11 +38,15 @@ pub struct ReplacePoATokenContractOptions {
     pub no_one_yocto_for_key_adding: bool,
 
     /// The wasm files that will be replacing the PoA token contracts
-    #[clap(long)]
+    #[clap(long, value_name = "PATH")]
     pub poa_token_wasm_file: PathBuf,
 
     /// The directory (absolute or relative) where backup contracts will be stored, before writing new ones.
-    #[clap(long, default_value("poa-tokens-contracts-backup"))]
+    #[clap(
+        long,
+        value_name = "PATH",
+        default_value("poa-tokens-contracts-backup")
+    )]
     pub poa_tokens_contracts_backup_dir: PathBuf,
 }
 
