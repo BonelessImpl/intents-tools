@@ -13,6 +13,7 @@ pub struct RunOptions {
 pub enum RunCommand {
     /// Run storage deposit funding for a list of given tokens using the StorageManagement interface
     FundStorageDeposit(fund_storage_deposit_options::FundStorageDepositOptions),
-    /// Replace PoA token smart contract with a new one
+    /// Replaces the contract code of a list of PoA token contracts. All contracts are expected to be under one PoA factory contract.
+    /// The process adds full access key, replaces the contract, then removes the key.
     ReplacePOATokenContract(replace_poa_token_contract_options::ReplacePoATokenContractOptions),
 }
