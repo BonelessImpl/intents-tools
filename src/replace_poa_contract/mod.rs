@@ -1,6 +1,9 @@
 mod subtoken;
 
-use std::path::{Path, PathBuf};
+use std::{
+    path::{Path, PathBuf},
+    sync::{Arc, atomic::AtomicBool},
+};
 
 use anyhow::Context;
 use near_sdk::NearToken;
@@ -358,9 +361,25 @@ pub fn run(options: ReplacePoATokenContractOptions) -> anyhow::Result<()> {
         "\n⚠ About to start replacing contracts. The process will start in a few seconds. DO NOT stop it before it finishes.\n"
     );
 
+    let stopped = Arc::new(AtomicBool::new(false));
+    {
+        let stopped_in_thread = stopped.clone();
+
+        ctrlc::set_handler(move || {
+            eprintln!("\nReceived Ctrl+C signal");
+            stopped_in_thread.store(true, std::sync::atomic::Ordering::SeqCst);
+        })
+        .expect("Failed to set Ctrl+C signal handler");
+    }
+
     std::thread::sleep(std::time::Duration::from_secs(8));
 
     for subtoken in &tokens.tokens_list {
+        if stopped.load(std::sync::atomic::Ordering::SeqCst) {
+            eprintln!("Stopping due to Ctrl+C signal received");
+            return Err(anyhow::anyhow!("Stopping due to Ctrl+C signal received"));
+        }
+
         add_full_access_key_to_poa_token(&poa_factory_contract_id, subtoken, &public_key)
             .context("While adding full access key")?;
 
