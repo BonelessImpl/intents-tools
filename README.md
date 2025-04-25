@@ -42,5 +42,14 @@ cargo run -- replace-poa-token-contract --help
 First, place `poa-seed.txt` with the seed phrase that contains the seed, whose key will be added (and eventually removed) to PoA token contracts to do the replacement
 
 ```
-cargo run -- replace-poa-token-contract --poa-factory-account-id poa-factory.example.near --tokens-prefixes-list-file subtokens.txt --source-account-for-action poa-factory.example.near --poa-token-wasm-file defuse_poa_token.wasm
+cargo run -- replace-poa-token-contract --poa-factory-account-id poa-factory.example.near --tokens-prefixes-list-file subtokens.txt --poa-token-wasm-file defuse_poa_token.wasm
 ```
+
+The file `subtokens.txt` should look something like this:
+
+```
+ft1
+ft2
+```
+
+where this means that PoA tokens have the accounts `ft1.poa-factory.example.near`, `ft2.poa-factory.example.near`, etc.
